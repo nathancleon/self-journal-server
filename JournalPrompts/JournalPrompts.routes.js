@@ -5,9 +5,11 @@ const {verifyToken} = require('../middleware');
 
 let router = express.Router();
 
-router.get('/all', verifyToken, journalController.fetchAllPrompts);
+router.use(verifyToken);
 
-router.post('/submit', verifyToken, journalController.submitPrompts);
+router.get('/all', journalController.fetchAllPrompts);
+
+router.post('/submit', journalController.submitPrompts);
 
 
 module.exports = router;

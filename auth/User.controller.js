@@ -15,10 +15,22 @@ exports.registerUser = (req, res) => {
         })
         return;
       }
+      console.log(req.body._id);
 
       let newUser = new userModel();
 
+
       newUser.email = req.body.email;
+      newUser.id = req.body._id;
+
+      let userToken = {
+        email: newUser.email,
+        id: newUser.id
+      }
+  
+      let token = jwt.sign(userToken, PASSPORT_SECRET);
+  
+
       bcrypt.hash(req.body.password, 10, (error, hashPassword) => {
         if (error) {
           res.status(401).json({
@@ -31,7 +43,12 @@ exports.registerUser = (req, res) => {
         newUser.save()
           .then((user) => {
             res.status(200).json({
-              message: 'user successfully created'
+              message: 'user successfully created',
+              data: {
+                email: userToken.email,
+                id: userToken.id,
+                token: token
+              }
             })
           }).catch((error) => {
             res.status(500).json({
@@ -41,7 +58,7 @@ exports.registerUser = (req, res) => {
       })
    }).catch((error) => {
        res.status(500).json({
-         message: 'something happened'
+         message: 'something happened' + error
        })
     })
 }

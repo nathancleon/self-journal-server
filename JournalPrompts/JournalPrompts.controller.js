@@ -3,7 +3,7 @@ const journalModel = require('./JournalPrompts.models');
 exports.fetchAllPrompts = function(req, res) {
   journalModel
     .find({
-      userID: req.params.id
+      userID: req.user.id
     })
     .then((journal) => {
       res.status(200).json({
@@ -20,35 +20,37 @@ exports.fetchAllPrompts = function(req, res) {
 };
 
 exports.submitPrompts = function(req, res) {
-  console.log(req.body);
-  
+  console.log('submit prompts ', req.body);
+
   let newJournal = new journalModel();
   
-  newJournal.answerSelf = req.body.answerSelf;
-  newJournal.answerAnxiety= req.body.answerAnxiety;
-  newJournal.answerDepression = req.body.answerDepression;
-  newJournal.answerConcentration = req.body.answerConcentration;
-  newJournal.answerFamily = req.body.answerFamily;
-  newJournal.answerFriendships = req.body.answerFriendships;
+  newJournal.answerSelf = req.body.journalData.answerSelf;
+  newJournal.answerAnxiety= req.body.journalData.answerAnxiety;
+  newJournal.answerDepression = req.body.journalData.answerDepression;
+  newJournal.answerConcentration = req.body.journalData.answerConcentration;
+  newJournal.answerFamily = req.body.journalData.answerFamily;
+  newJournal.answerFriendships = req.body.journalData.answerFriendships;
 
-  newJournal.answerTextSelf = req.body.answerTextSelf;
-  newJournal.answerTextAnxiety = req.body.answerTextAnxiety;
-  newJournal.answerTextDepression = req.body.answerTextDepression;
-  newJournal.answerTextConcentration = req.body.answerTextConcentration;
-  newJournal.answerTextFamily = req.body.answerTextFamily;
-  newJournal.answerTextFriendships = req.body.answerTextFriendships;
+  newJournal.answerTextSelf = req.body.journalData.answerTextSelf;
+  newJournal.answerTextAnxiety = req.body.journalData.answerTextAnxiety;
+  newJournal.answerTextDepression = req.body.journalData.answerTextDepression;
+  newJournal.answerTextConcentration = req.body.journalData.answerTextConcentration;
+  newJournal.answerTextFamily = req.body.journalData.answerTextFamily;
+  newJournal.answerTextFriendships = req.body.journalData.answerTextFriendships;
 
-  newJournal.userID = req.body.userID;
+  newJournal.userID = req.body.journalData.userID;
+
+  console.log(newJournal);
 
   newJournal.save()
-    .then((res) => {
+    .then((res, function() {
       res.status(200).json({
         message: 'submitPrompts is working'
       })
-    })
-    .catch(() => {
+    }))
+    .catch((function() {
       res.status(500).json({
-        message: 'submitPrompts is not working'
+        message: 'submitPrompts is not working ' + error
       })
-    });
+    }));
 }

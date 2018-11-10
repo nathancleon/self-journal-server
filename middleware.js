@@ -2,7 +2,16 @@ const jwt = require('jsonwebtoken');
 const {PASSPORT_SECRET} = require('./config');
 
 exports.verifyToken = (req, res, next) => {
-  const token = req.params.token || req.body.token;
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200)
+    res.end()
+    return
+  }
+
+  const token = req.query.token;
+
+  // console.log('verify token ', req.body);
 
   if(!token) {
     res.status(401).json({
