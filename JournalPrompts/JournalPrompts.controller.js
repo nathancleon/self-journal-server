@@ -37,6 +37,7 @@ exports.submitPrompts = function(req, res) {
   newJournal.answerTextConcentration = req.body.journalData.answerTextConcentration;
   newJournal.answerTextFamily = req.body.journalData.answerTextFamily;
   newJournal.answerTextFriendships = req.body.journalData.answerTextFriendships;
+  newJournal.answerTextGratitude = req.body.journalData.answerTextGratitude;
 
   newJournal.userID = req.body.journalData.userID;
 

@@ -10,8 +10,10 @@ let journalSchema = new mongoose.Schema({
   answerTextSelf: String,
   answerTextAnxiety: String,
   answerTextDepression: String,
+  answerTextConcentration: String,
   answerTextFamily: String,
   answerTextFriendships: String,
+  answerTextGratitude: String,
   userID: {type: mongoose.Schema.ObjectId, ref: "users"},
   created: { type: String, default: new Date() },
   lastUpdated: { type: String, default: new Date() }
