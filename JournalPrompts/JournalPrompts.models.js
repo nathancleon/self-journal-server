@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 let journalSchema = new mongoose.Schema({ 
-  answerSelf: Number,
-  answerAnxiety: Number,
-  answerDepression: Number,
-  answerConcentration: Number,
-  answerFamily: Number,
-  answerFriendships: Number,
+  answerSelf: String,
+  answerAnxiety: String,
+  answerDepression: String,
+  answerConcentration: String,
+  answerFamily: String,
+  answerFriendships: String,
   answerTextSelf: String,
   answerTextAnxiety: String,
   answerTextDepression: String,
