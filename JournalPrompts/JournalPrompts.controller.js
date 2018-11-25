@@ -55,3 +55,37 @@ exports.submitPrompts = function(req, res) {
       })
     }));
 }
+
+exports.updatePrompts = function (req, res) {
+
+  const updated = {};
+  const updateableFields = [
+    'answerSelf',
+    'answerAnxiety',
+    'answerDepression',
+    'answerConcentration',
+    'answerFamily',
+    'answerFriendships',
+    'answerTextSelf',
+    'answerTextAnxiety',
+    'answerTextDepression',
+    'answerTextConcentration',
+    'answerTextFamily',
+    'answerTextFriendships',
+    'answerTextGratitude'
+  ];
+  updateableFields.forEach(field => {
+    if(field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
+
+  updated.lastUpdated = new Date();
+
+  journalModel
+    .findOneAndUpdate(req.params._id, { $set: updated }, { new: true })
+    .then(updatedJournal => res.json(updatedJournal))
+    .catch(err => res.status(500).json({
+      message: "something went wrong"
+    }));
+};
