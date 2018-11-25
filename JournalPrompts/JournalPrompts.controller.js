@@ -24,20 +24,20 @@ exports.submitPrompts = function(req, res) {
 
   let newJournal = new journalModel();
   
-  newJournal.answerSelf = req.body.journalData.answerSelf;
-  newJournal.answerAnxiety= req.body.journalData.answerAnxiety;
-  newJournal.answerDepression = req.body.journalData.answerDepression;
-  newJournal.answerConcentration = req.body.journalData.answerConcentration;
-  newJournal.answerFamily = req.body.journalData.answerFamily;
-  newJournal.answerFriendships = req.body.journalData.answerFriendships;
+  newJournal.answerValues.answerSelf = req.body.journalData.answerSelf;
+  newJournal.answerValues.answerAnxiety= req.body.journalData.answerAnxiety;
+  newJournal.answerValues.answerDepression = req.body.journalData.answerDepression;
+  newJournal.answerValues.answerConcentration = req.body.journalData.answerConcentration;
+  newJournal.answerValues.answerFamily = req.body.journalData.answerFamily;
+  newJournal.answerValues.answerFriendships = req.body.journalData.answerFriendships;
 
-  newJournal.answerTextSelf = req.body.journalData.answerTextSelf;
-  newJournal.answerTextAnxiety = req.body.journalData.answerTextAnxiety;
-  newJournal.answerTextDepression = req.body.journalData.answerTextDepression;
-  newJournal.answerTextConcentration = req.body.journalData.answerTextConcentration;
-  newJournal.answerTextFamily = req.body.journalData.answerTextFamily;
-  newJournal.answerTextFriendships = req.body.journalData.answerTextFriendships;
-  newJournal.answerTextGratitude = req.body.journalData.answerTextGratitude;
+  newJournal.answerTextValues.answerTextSelf = req.body.journalData.answerTextSelf;
+  newJournal.answerTextValues.answerTextAnxiety = req.body.journalData.answerTextAnxiety;
+  newJournal.answerTextValues.answerTextDepression = req.body.journalData.answerTextDepression;
+  newJournal.answerTextValues.answerTextConcentration = req.body.journalData.answerTextConcentration;
+  newJournal.answerTextValues.answerTextFamily = req.body.journalData.answerTextFamily;
+  newJournal.answerTextValues.answerTextFriendships = req.body.journalData.answerTextFriendships;
+  newJournal.answerTextValues.answerTextGratitude = req.body.journalData.answerTextGratitude;
 
   newJournal.userID = req.body.journalData.userID;
 
@@ -57,15 +57,18 @@ exports.submitPrompts = function(req, res) {
 }
 
 exports.updatePrompts = function (req, res) {
-
+  
   const updated = {};
-  const updateableFields = [
+  const updateableAnswerFields = [
     'answerSelf',
     'answerAnxiety',
     'answerDepression',
     'answerConcentration',
     'answerFamily',
-    'answerFriendships',
+    'answerFriendships'
+  ];
+
+  const updateableAnswerTextFields = [
     'answerTextSelf',
     'answerTextAnxiety',
     'answerTextDepression',
@@ -74,9 +77,16 @@ exports.updatePrompts = function (req, res) {
     'answerTextFriendships',
     'answerTextGratitude'
   ];
-  updateableFields.forEach(field => {
-    if(field in req.body) {
-      updated[field] = req.body[field];
+
+  updateableAnswerFields.forEach(field => {
+    if(field in req.body.answerValues) {
+      updated.answerValues[field] = req.body.answerValues[field];
+    }
+  });
+
+  updateableAnswerTextFields.forEach(field => {
+    if(field in req.body.answerTextValues) {
+      updated.answerTextValues[field] = req.body.answerTextValues[field];
     }
   });
 
