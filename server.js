@@ -19,8 +19,6 @@ app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/journal', journalRoutes);
 
-mongoose.set('useFindAndModify', false);
-
 let server;
 
 function runServer(dbString, port) {

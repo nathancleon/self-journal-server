@@ -40,6 +40,7 @@ exports.submitPrompts = function(req, res) {
   newJournal.answerTextGratitude = req.body.journalData.answerTextGratitude;
 
   newJournal.userID = req.body.journalData.userID;
+  newJournal.created = new Date();
 
   console.log(newJournal);
 
@@ -83,7 +84,7 @@ exports.updatePrompts = function (req, res) {
   updated.lastUpdated = new Date();
 
   journalModel
-    .findOneAndUpdate(req.params._id, { $set: updated }, { new: true })
+    .findByIdAndUpdate(req.body._id, { $set: updated }, { new: true })
     .then(updatedJournal => res.json(updatedJournal))
     .catch(err => res.status(500).json({
       message: "something went wrong"
