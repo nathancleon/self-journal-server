@@ -57,7 +57,7 @@ exports.submitPrompts = function(req, res) {
     }));
 }
 
-exports.updatePrompts = function (req, res) {
+exports.updateJournalEntry = function (req, res) {
 
   const updated = {};
   const updateableFields = [
@@ -89,4 +89,22 @@ exports.updatePrompts = function (req, res) {
     .catch(err => res.status(500).json({
       message: "something went wrong"
     }));
+};
+
+exports.deleteJournalEntry = function(req, res) {
+
+  journalModel
+    .findByIdAndRemove(req.body._id)
+    .then((journal) => {
+      res.status(200).json({
+        message: 'journal entry successfully deleted',
+        data: journal
+      });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: 'something did not work correctly',
+        data: error
+      });
+    });
 };
