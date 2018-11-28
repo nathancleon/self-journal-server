@@ -5,6 +5,7 @@ exports.fetchAllPrompts = function(req, res) {
     .find({
       userID: req.user.id
     })
+    .sort('-created')
     .then((journal) => {
       res.status(200).json({
         message: 'Retrieved journal prompt entries',
@@ -84,17 +85,17 @@ exports.updateJournalEntry = function (req, res) {
   updated.lastUpdated = new Date();
 
   journalModel
-    .findByIdAndUpdate(req.body._id, { $set: updated }, { new: true })
+    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
     .then(updatedJournal => res.json(updatedJournal))
     .catch(err => res.status(500).json({
-      message: "something went wrong"
+      message: "something went wrong",
     }));
 };
 
 exports.deleteJournalEntry = function(req, res) {
 
   journalModel
-    .findByIdAndRemove(req.body._id)
+    .findByIdAndRemove(req.params.id)
     .then((journal) => {
       res.status(200).json({
         message: 'journal entry successfully deleted',
