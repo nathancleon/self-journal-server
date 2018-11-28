@@ -98,13 +98,11 @@ exports.deleteJournalEntry = function(req, res) {
     .then((journal) => {
       res.status(200).json({
         message: 'journal entry successfully deleted',
-        data: journal
       });
     })
     .catch((error) => {
       res.status(500).json({
         message: 'something did not work correctly',
-        data: error
       });
     });
 };
