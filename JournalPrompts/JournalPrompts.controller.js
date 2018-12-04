@@ -46,12 +46,13 @@ exports.submitPrompts = function(req, res) {
   console.log(newJournal);
 
   newJournal.save()
-    .then((res, function() {
+    .then((res, function(journal) {
       res.status(200).json({
-        message: 'submitPrompts is working'
+        message: 'submitPrompts is working',
+        data: journal
       })
     }))
-    .catch((function() {
+    .catch((function(error) {
       res.status(500).json({
         message: 'submitPrompts is not working ' + error
       })
