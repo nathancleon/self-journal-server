@@ -15,6 +15,7 @@ exports.registerUser = (req, res) => {
         })
         return;
       }
+      console.log(req.body._id);
 
       let newUser = new userModel();
 
@@ -40,7 +41,7 @@ exports.registerUser = (req, res) => {
 
         newUser.password = hashPassword;
         newUser.save()
-          .then((user) => {
+          .then(() => {
             res.status(200).json({
               message: 'user successfully created',
               data: {

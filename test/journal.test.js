@@ -8,18 +8,17 @@ const expect = chai.expect;
 
 chai.use(chaiHTTP);
 
-
 let token;
-let journal;
+var journal;
 let userID;
 
 function cleanDB() {
   return new Promise((resolve, reject) => {
     mongoose.connection.dropDatabase()
-      .then((result) => {
+      .then(result => {
         resolve(result);
       })
-      .catch((error) => {
+      .catch(error => {
         reject(error);
       });
   });
@@ -31,41 +30,50 @@ describe('journal-tests', () => {
   });
 
   after(() => {
-    cleanDB();
-    closeServer();
+    cleanDB().then(() => {
+      closeServer();
+    })
   });
 
-  it('should create a user', () => {
-    return chai.request(app)
+  it('should create a user', (done) => {
+    chai.request(app)
       .post('/auth/register')
       .send({
         email: 'test@test.com',
         password: 'password123'
       })
-      .then((res) => {
+      .then(res => {
         console.log("user successfully registered");
         userID = res.body.data.id;
         token = res.body.data.token;
         expect(res).to.have.status(200);
-      });
+        done();
+      })
+      .catch(err => {
+        throw err;
+      })
   });
 
-  it('should log in the user', () => {
-    return chai.request(app)
+  it('should log in the user', (done) => {
+    chai.request(app)
       .post('/auth/login')
       .send({
         email: 'test@test.com',
         password: 'password123'
       })
-      .then((res) => {
+      .then(res => {
         token = res.body.data.token;
         expect(res).to.have.status(200);
-      });
+        done();
+      })
+      .catch(err => {
+        throw err;
+      })
   });
 
-  it('should create a new journal', () => {
-    return chai.request(app)
-      .post('/journal/submit?token=' + token)
+  it('should create a new journal', (done) => {
+    chai.request(app)
+      .post(`/journal/submit?token=${token}`)
       .set('content-type', 'application/json')
       .set('Accept', 'application/json')
       .send({
@@ -87,19 +95,28 @@ describe('journal-tests', () => {
           created: new Date(),
         }
       })
-      .then((res) => {
+      .then(res => {
         journal = res.body.data._id;
         expect(res).to.have.status(200);
+        done();
     })
-    .catch((error) => {
-      console.log(error);
-      expect(res).to.have.status(500);
+    .catch(err => {
+      throw err;
     })
   });
 
-  it('should update a journal', () => {
-    return chai.request(app)
-      .put(`/journal/one/${journal}?token=` + token)
+  it('should retrieve all the journal entries', (done) => {
+    chai.request(app)
+    .get(`/journal/all?token=${token}`)
+    .then(res => {
+      expect(res).to.have.status(200);
+      done();
+    })
+  });
+
+  it('should update a journal', (done) => {
+   chai.request(app)
+      .put(`/journal/one/${journal}?token=${token}`)
       .set('content-type', 'application/json; charset=utf-8')
       .send({ 
         journalData: {
@@ -107,16 +124,25 @@ describe('journal-tests', () => {
         answerTextSelf: "self eval updated"
       }
       })
-      .then(function(err, res) {
+      .then(res => {
+        console.log(res);
         expect(res).to.have.status(200);
-    });
+        done();
+    })
+    .catch((err) => {
+      throw err;
+    })
   });
 
-  it('should delete a journal', () => {
-    return chai.request(app)
-      .delete(`/journal/one/${journal}?token=` + token)
-      .then(function(err, res) {
+  it('should delete a journal', (done) => {
+   chai.request(app)
+      .delete(`/journal/one/${journal}?token=${token}`)
+      .then(res => {
         expect(res).to.have.status(200);
-    });
-  });
+        done();
+    })
+    .catch((err) => {
+      throw err;
+    })
+  })
 });
