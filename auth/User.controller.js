@@ -1,7 +1,6 @@
 const userModel = require('./User.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {PASSPORT_SECRET} = require('../config');
 
 exports.registerUser = (req, res) => {
 

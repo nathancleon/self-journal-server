@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const {PASSPORT_SECRET} = require('./config');
 
 exports.verifyToken = (req, res, next) => {
 

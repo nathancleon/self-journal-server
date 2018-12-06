@@ -3,7 +3,6 @@ const chai = require('chai');
 const chaiHTTP = require('chai-http');
 const mongoose = require('mongoose');
 const {app, runServer, closeServer} = require('../server.js');
-const {DB_TEST_URL, TEST_PORT} = require('../config');
 const expect = chai.expect;
 
 chai.use(chaiHTTP);
