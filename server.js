@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const journalRoutes = require('./JournalPrompts/JournalPrompts.routes');
 const authRoutes = require('./auth/User.routes');
 const app = express();
+const {PORT, DB_URL, TEST_PORT, DB_TEST_URL, PASSPORT_SECRET} = require('./config');
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
