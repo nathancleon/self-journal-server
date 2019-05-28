@@ -6,7 +6,6 @@ exports.fetchAllPrompts = function(req, res) {
       userID: req.user.id
     })
     .then((journal) => {
-      console.log(journal);
       res.status(200).json({
         message: 'Retrieved journal prompt entries',
         data: journal
@@ -41,8 +40,6 @@ exports.submitPrompts = function(req, res) {
 
   newJournal.userID = req.body.journalData.userID;
 
-  console.log("this is what is submitted", newJournal);
-
   newJournal.save()
     .then((res, function() {
       res.status(200).json({
@@ -57,8 +54,6 @@ exports.submitPrompts = function(req, res) {
 }
 
 exports.updatePrompts = function (req, res) {
-  console.log("----------THIS IS THE REQUEST-------------", req.body);
-  
   const updatedData = req.body;
   updatedData.lastUpdated = new Date();
 
@@ -67,7 +62,9 @@ exports.updatePrompts = function (req, res) {
       { $set: updatedData },
       { new: true })
     .then(updatedJournal => res.json(updatedJournal))
-    .catch(err => console.log(err))
+    .catch(err => res.status(500).json({
+      message: "something went wrong"
+    }));
 };
 
 exports.deleteJournalEntry = function(req, res) {

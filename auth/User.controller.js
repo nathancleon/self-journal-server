@@ -15,7 +15,6 @@ exports.registerUser = (req, res) => {
         })
         return;
       }
-      console.log(req.body._id);
 
       let newUser = new userModel();
 
