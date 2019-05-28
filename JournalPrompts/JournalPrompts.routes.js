@@ -11,6 +11,8 @@ router.get('/all', journalController.fetchAllPrompts);
 
 router.post('/submit', journalController.submitPrompts);
 
-router.put('/one/:id', journalController.updatePrompts)
+router.put('/one/:id', journalController.updatePrompts);
+
+router.delete('/one/:id', journalController.deleteJournalEntry);
 
 module.exports = router;

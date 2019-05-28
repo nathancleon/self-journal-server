@@ -6,6 +6,7 @@ exports.fetchAllPrompts = function(req, res) {
       userID: req.user.id
     })
     .then((journal) => {
+      console.log(journal);
       res.status(200).json({
         message: 'Retrieved journal prompt entries',
         data: journal
@@ -20,28 +21,27 @@ exports.fetchAllPrompts = function(req, res) {
 };
 
 exports.submitPrompts = function(req, res) {
-  console.log('submit prompts ', req.body);
 
   let newJournal = new journalModel();
   
-  newJournal.answerValues.answerSelf = req.body.journalData.answerSelf;
-  newJournal.answerValues.answerAnxiety= req.body.journalData.answerAnxiety;
-  newJournal.answerValues.answerDepression = req.body.journalData.answerDepression;
-  newJournal.answerValues.answerConcentration = req.body.journalData.answerConcentration;
-  newJournal.answerValues.answerFamily = req.body.journalData.answerFamily;
-  newJournal.answerValues.answerFriendships = req.body.journalData.answerFriendships;
+  newJournal.answerValues.answerSelf = req.body.journalData.answer.answerSelf;
+  newJournal.answerValues.answerAnxiety= req.body.journalData.answer.answerAnxiety;
+  newJournal.answerValues.answerDepression = req.body.journalData.answer.answerDepression;
+  newJournal.answerValues.answerConcentration = req.body.journalData.answer.answerConcentration;
+  newJournal.answerValues.answerFamily = req.body.journalData.answer.answerFamily;
+  newJournal.answerValues.answerFriendships = req.body.journalData.answer.answerFriendships;
 
-  newJournal.answerTextValues.answerTextSelf = req.body.journalData.answerTextSelf;
-  newJournal.answerTextValues.answerTextAnxiety = req.body.journalData.answerTextAnxiety;
-  newJournal.answerTextValues.answerTextDepression = req.body.journalData.answerTextDepression;
-  newJournal.answerTextValues.answerTextConcentration = req.body.journalData.answerTextConcentration;
-  newJournal.answerTextValues.answerTextFamily = req.body.journalData.answerTextFamily;
-  newJournal.answerTextValues.answerTextFriendships = req.body.journalData.answerTextFriendships;
-  newJournal.answerTextValues.answerTextGratitude = req.body.journalData.answerTextGratitude;
+  newJournal.answerTextValues.answerTextSelf = req.body.journalData.answerText.answerTextSelf;
+  newJournal.answerTextValues.answerTextAnxiety = req.body.journalData.answerText.answerTextAnxiety;
+  newJournal.answerTextValues.answerTextDepression = req.body.journalData.answerText.answerTextDepression;
+  newJournal.answerTextValues.answerTextConcentration = req.body.journalData.answerText.answerTextConcentration;
+  newJournal.answerTextValues.answerTextFamily = req.body.journalData.answerText.answerTextFamily;
+  newJournal.answerTextValues.answerTextFriendships = req.body.journalData.answerText.answerTextFriendships;
+  newJournal.answerTextValues.answerTextGratitude = req.body.journalData.answerText.answerTextGratitude;
 
   newJournal.userID = req.body.journalData.userID;
 
-  console.log(newJournal);
+  console.log("this is what is submitted", newJournal);
 
   newJournal.save()
     .then((res, function() {
@@ -57,45 +57,31 @@ exports.submitPrompts = function(req, res) {
 }
 
 exports.updatePrompts = function (req, res) {
+  console.log("----------THIS IS THE REQUEST-------------", req.body);
   
-  const updated = {};
-  const updateableAnswerFields = [
-    'answerSelf',
-    'answerAnxiety',
-    'answerDepression',
-    'answerConcentration',
-    'answerFamily',
-    'answerFriendships'
-  ];
-
-  const updateableAnswerTextFields = [
-    'answerTextSelf',
-    'answerTextAnxiety',
-    'answerTextDepression',
-    'answerTextConcentration',
-    'answerTextFamily',
-    'answerTextFriendships',
-    'answerTextGratitude'
-  ];
-
-  updateableAnswerFields.forEach(field => {
-    if(field in req.body.answerValues) {
-      updated.answerValues[field] = req.body.answerValues[field];
-    }
-  });
-
-  updateableAnswerTextFields.forEach(field => {
-    if(field in req.body.answerTextValues) {
-      updated.answerTextValues[field] = req.body.answerTextValues[field];
-    }
-  });
-
-  updated.lastUpdated = new Date();
+  const updatedData = req.body;
+  updatedData.lastUpdated = new Date();
 
   journalModel
-    .findOneAndUpdate(req.params._id, { $set: updated }, { new: true })
+    .findOneAndUpdate(req.params._id, 
+      { $set: updatedData },
+      { new: true })
     .then(updatedJournal => res.json(updatedJournal))
-    .catch(err => res.status(500).json({
-      message: "something went wrong"
-    }));
+    .catch(err => console.log(err))
+};
+
+exports.deleteJournalEntry = function(req, res) {
+
+  journalModel
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.status(200).json({
+        message: 'journal entry successfully deleted',
+      });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: 'something did not work correctly ' + error,
+      });
+    });
 };
