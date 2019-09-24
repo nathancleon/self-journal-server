@@ -11,8 +11,6 @@ exports.verifyToken = (req, res, next) => {
 
   const token = req.query.token;
 
-  // console.log('verify token ', req.body);
-
   if(!token) {
     res.status(401).json({
       message: 'token not provided'
