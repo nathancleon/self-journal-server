@@ -4,7 +4,7 @@ exports.fetchAllPrompts = function(req, res) {
   journalModel
     .find({
       userID: req.user.id
-    })
+    }).sort({"created": -1})
     .then((journal) => {
       res.status(200).json({
         message: 'Retrieved journal prompt entries',
@@ -39,6 +39,7 @@ exports.submitPrompts = function(req, res) {
   newJournal.answerTextValues.answerTextGratitude = req.body.journalData.answerText.answerTextGratitude;
 
   newJournal.userID = req.body.journalData.userID;
+  newJournal.created = new Date();
 
   newJournal.save()
     .then((res, function() {
@@ -59,11 +60,10 @@ exports.updatePrompts = function (req, res) {
 
   journalModel
     .findOneAndUpdate(req.params._id, 
-      { $set: updatedData },
-      { new: true })
+      { $set: updatedData }, {new: true})
     .then(updatedJournal => res.json(updatedJournal))
     .catch(err => res.status(500).json({
-      message: "something went wrong"
+      message: err
     }));
 };
 

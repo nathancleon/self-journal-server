@@ -19,7 +19,7 @@ let journalSchema = new mongoose.Schema({
     answerTextGratitude: String
   },
   userID: {type: mongoose.Schema.ObjectId, ref: "users"},
-  created: { type: String, default: new Date() },
+  created: Date,
   lastUpdated: { type: String, default: new Date() }
 });
 
